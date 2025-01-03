@@ -41,7 +41,8 @@ public static void QuitInstance(object item, string nameOrIndex)
     ExecuteCommand($"quit --index {nameOrIndex}");
 }
 ```
-object item: item là model. nhưng thiết kế để trong dll. model để trong project application thì vẫn binding Property Status để update lên views được.
+- object item: **item là model**. nhưng code này là trong dll.
+- còn model để trong project application thì vẫn binding Property Status để update lên views được.
 
 ### Class Helper >> return commands
 ```Functions in class Helper
