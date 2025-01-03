@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace DZHelper.Models
+namespace DZHelper.ViewModels
 {
     public partial class BaseViewModel : ObservableObject
     {
