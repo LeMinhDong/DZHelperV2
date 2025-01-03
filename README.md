@@ -22,10 +22,19 @@ https://www.nuget.org/packages/DZ.WPF.DZHelperV2/
 - Tạo commands từ trong class dll.
 - Binding commands lên view. để khỏi tạo lại nhiều xaml.
 
-# Cách sử dụng
+# Ldplayer
 ```Dll
-adgbs
-ádgasdg
+public static void LaunchInstance(object item, string nameOrIndex)
+{
+    item.ChangeProperty($"launch");
+    ExecuteCommand($"launch --index {nameOrIndex}");
+}
+
+public static void QuitInstance(object item, string nameOrIndex)
+{
+    item.ChangeProperty("quit");
+    ExecuteCommand($"quit --index {nameOrIndex}");
+}
 
 ```
 # Test
