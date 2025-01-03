@@ -11,7 +11,6 @@ namespace DZHelper.Models
         [ObservableProperty]
         private string name;
 
-        [ObservableProperty]
-        private string name;
+        
     }
 }

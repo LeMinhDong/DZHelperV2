@@ -1,5 +1,7 @@
-﻿using DZHelper.Extensions;
+﻿using DZHelper.Commands;
+using DZHelper.Extensions;
 using DZHelper.HelperCsharf;
+using DZHelper.Models;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
@@ -20,104 +22,18 @@ namespace DZHelper.Helpers
 
             PathLD = path;
         }
+        
 
-        public static Task ExecuteActionAsync(object item, Funs actionId, string[] args)
-        {
-            //args[0] = index
-            //args[1] = name
-            //args[2] = input/status2/step
-            //args[3] = 
-            //args[4] = 
-            if (actionId == Funs.Launch)
-                LaunchInstance(item,args[0]);
-            if (actionId == Funs.Quit)
-                QuitInstance(item, args[0]);
-            if (actionId == Funs.QuitAll)
-                QuitAllInstances();
-            if (actionId == Funs.Add)
-                AddInstance(item, args[2]);//
-            if (actionId == Funs.Copy)
-                CopyInstance(item, args[1], args[2]);//
-            if (actionId == Funs.Remove)
-                RemoveInstance(item, args[0]);//
-            if (actionId == Funs.Rename)
-                RenameInstance(item, args[0], args[2]);
-            if (actionId == Funs.InstallApk)
-                InstallAppFromFile(item, args[0],"path apk");
-            if (actionId == Funs.InstallPackage)
-                InstallAppFromPackage(item, args[0],"package name");
-            if (actionId == Funs.UnInstallPackage)
-                UninstallApp(item, args[0],"pagekage name");
-            if (actionId == Funs.Backup)
-                BackupInstance(item, args[0],"filename");
-            if (actionId == Funs.Restore)
-                RestoreInstance(item, args[0], "filename");
-            if (actionId == Funs.Modify)
-                modifyRandom(item, args[0]);
-            if (actionId == Funs.Pull)
-                Pull(item, args[0], "", "");
-            if (actionId == Funs.Push)
-                Push(item, args[0], "", "");
-            if (actionId == Funs.InputText)
-                InputText(item, args[0], args[2]);
-            if (actionId == Funs.RestartAdb)
-                RestartAdb(item);
-            if (actionId == Funs.AdbReconnect)
-                ReconnectOffline(item);
-
-
-            return Task.CompletedTask;
-        }
-
-        public enum Funs
-        {
-            [Description("launch")]
-            Launch = 0,
-            [Description("Quit")]
-            Quit = 1,
-            [Description("QuitAll")]
-            QuitAll = 2,
-            [Description("Add")]
-            Add = 3,
-            [Description("Copy")]
-            Copy = 4,
-            [Description("Remove")]
-            Remove = 5,
-            [Description("rename")]
-            Rename = 6,
-            [Description("install Apk")]
-            InstallApk = 7,
-            [Description("install Package")]
-            InstallPackage = 8,
-            [Description("uninstall Package")]
-            UnInstallPackage = 9,
-            [Description("backup")]
-            Backup = 10,
-            [Description("restore")]
-            Restore = 11,
-            [Description("modify")]
-            Modify = 12,
-            [Description("restore")]
-            Pull = 13,
-            [Description("restore")]
-            Push = 14,
-            [Description("restore")]
-            InputText = 15,
-            [Description("adb Recconect Offline")]
-            AdbReconnect = 16,
-            [Description("restart Adb")]
-            RestartAdb = 17
-        }
-        public static void LaunchInstance(object item, string nameOrIndex)
+        public static void LaunchInstance(LdModel item)
         {
             item.ChangeProperty($"launch");
-            ExecuteCommand($"launch --index {nameOrIndex}");
+            ExecuteCommand($"launch --index {item.Index}");
         }
 
-        public static void QuitInstance(object item, string nameOrIndex)
+        public static void QuitInstance(LdModel item)
         {
             item.ChangeProperty("quit");
-            ExecuteCommand($"quit --index {nameOrIndex}");
+            ExecuteCommand($"quit --index {item.Index}");
         }
 
         public static void QuitAllInstances()
@@ -125,114 +41,114 @@ namespace DZHelper.Helpers
             ExecuteCommand("quitall");
         }
 
-        public static void AddInstance(object item, string name)//
+        public static void AddInstance(LdModel item, string name)//
         {
             item.ChangeProperty($"add {name}");
-            ExecuteCommand($"add --name {name}");
+            ExecuteCommand($"add --name {item.TextInput}");
         }
 
-        public static void CopyInstance(object item, string newName, string sourceNameOrIndex)//
+        public static void CopyInstance(LdModel item)//
         {
-            item.ChangeProperty($"copy {newName}");
-            ExecuteCommand($"copy --name {newName} --from {sourceNameOrIndex}");
+            item.ChangeProperty($"copy {item.TextInput}");
+            ExecuteCommand($"copy --name {item.TextInput} --from {item.Index}");
         }
 
-        public static void RemoveInstance(object item, string nameOrIndex)//
+        public static void RemoveInstance(LdModel item)//
         {
-            item.ChangeProperty($"remove {nameOrIndex}");
-            ExecuteCommand($"remove --index {nameOrIndex}");
+            item.ChangeProperty($"remove {item.Index}");
+            ExecuteCommand($"remove --index {item.Index}");
         }
 
-        public static void RenameInstance(object item, string nameOrIndex, string newTitle)//
+        public static void RenameInstance(LdModel item, string newTitle)//
         {
-            item.ChangeProperty($"rename {nameOrIndex}");
-            ExecuteCommand($"rename --index {nameOrIndex} --title {newTitle}");
+            item.ChangeProperty($"rename {item.Index}");
+            ExecuteCommand($"rename --index {item.Index} --title {newTitle}");
         }
 
-        public static void InstallAppFromFile(object item, string nameOrIndex, string apkFilePath)
+        public static void InstallAppFromFile(LdModel item, string apkFilePath)
         {
             item.ChangeProperty("install apk");
-            ExecuteCommand($"installapp --index {nameOrIndex} --filename \"{apkFilePath}\"");
+            ExecuteCommand($"installapp --index {item.Index} --filename \"{apkFilePath}\"");
         }
 
-        public static void InstallAppFromPackage(object item, string nameOrIndex, string packageName)
+        public static void InstallAppFromPackage(LdModel item, string packageName)
         {
             item.ChangeProperty("install package");
-            ExecuteCommand($"installapp --index {nameOrIndex} --packagename {packageName}");
+            ExecuteCommand($"installapp --index {item.Index} --packagename {packageName}");
         }
 
-        public static void UninstallApp(object item, string nameOrIndex, string packageName)
+        public static void UninstallApp(LdModel item, string packageName)
         {
             item.ChangeProperty("uninstallapp package");
-            ExecuteCommand($"uninstallapp --index {nameOrIndex} --packagename {packageName}");
+            ExecuteCommand($"uninstallapp --index {item.Index} --packagename {packageName}");
         }
 
-        public static void BackupInstance(object item, string nameOrIndex, string filePath)
+        public static void BackupInstance(LdModel item, string filePath)
         {
             item.ChangeProperty($"backup {filePath}");
-            ExecuteCommand($"backup --index {nameOrIndex} --file \"{filePath}\"");
+            ExecuteCommand($"backup --index {item.Index} --file \"{filePath}\"");
         }
 
-        public static void RestoreInstance(object item, string nameOrIndex, string filePath)
+        public static void RestoreInstance(LdModel item, string filePath)
         {
             item.ChangeProperty($"restore {filePath}");
-            ExecuteCommand($"restore --index {nameOrIndex} --file \"{filePath}\"");
+            ExecuteCommand($"restore --index {item.Index} --file \"{filePath}\"");
         }
 
-        public static void modifyRandom(object item, string nameOrIndex)
+        public static void modifyRandom(LdModel item)
         {
             item.ChangeProperty($"modify Random");
-            ExecuteCommand($"modify  --index {nameOrIndex} --imei auto --androidid auto --mac auto");
+            ExecuteCommand($"modify  --index {item.Index} --imei auto --androidid auto --mac auto");
         }
 
        
-        public static void Pull(object item, string nameOrIndex, string remoteFilePath, string localFilePath)
+        public static void Pull(LdModel item, string remoteFilePath, string localFilePath)
         {
             item.ChangeProperty($"Pull");
-            ExecuteCommand($@"pull --index {nameOrIndex} --remote ""{remoteFilePath}"" --local ""{localFilePath}""");
+            ExecuteCommand($@"pull --index {item.Index} --remote ""{remoteFilePath}"" --local ""{localFilePath}""");
         }
         
         
 
-        public static void Push(object item, string nameOrIndex, string remoteFilePath, string localFilePath)
+        public static void Push(LdModel item, string remoteFilePath, string localFilePath)
         {
             item.ChangeProperty($"Push");
-            ExecuteCommand($@"push --index {nameOrIndex} --remote ""{remoteFilePath}"" --local ""{localFilePath}""");
+            ExecuteCommand($@"push --index {item.Index} --remote ""{remoteFilePath}"" --local ""{localFilePath}""");
         }
-        public static void InputText(object item, string nameOrIndex, string text)
+        public static void InputText(LdModel item)
         {
             item.ChangeProperty($"input text");
-            text = text.EscapeString();
-            ExecuteCommand($"adb --index {nameOrIndex} --command \"shell input text '{text}'\"");
+            string text = item.TextInput.EscapeString();
+            ExecuteCommand($"adb --index {item.Index} --command \"shell input text '{text}'\"");
         }
-        public static void RestartAdb(object item)
+        public static void RestartAdb(LdModel item)
         {
             item.ChangeProperty($"Restart Adb");
             ExecuteCMD($"adb kill-server");
             ExecuteCMD($"adb start-server");
         }
-        public static void ReconnectOffline(object item)
+        public static void ReconnectOffline(LdModel item)
         {
             item.ChangeProperty($"Reconnect Offline");
             ExecuteCMD($"adb reconnect offline");
         }
-        public static List<string> GetRunningInstances(object item)
+        public static List<string> GetRunningInstances(LdModel item)
         {
             item.ChangeProperty("runninglist");
             var result = ExecuteCommandForResult("runninglist");
             return ParseList(result);
         }
 
-        public static List<string> GetAllInstances(object item)
+        public static List<string> GetAllInstances(LdModel item)
         {
             item.ChangeProperty("list");
             var result = ExecuteCommandForResult("list");
             return ParseList(result);
         }
 
-        public static bool IsInstanceRunning(object item, string nameOrIndex)
+        public static bool IsInstanceRunning(LdModel item)
         {
-            var result = ExecuteCommandForResult($"isrunning --name {nameOrIndex}");
+            var result = ExecuteCommandForResult($"isrunning --index {item.Index}");
             if (result.Trim().Equals("running", StringComparison.OrdinalIgnoreCase))
             {
                 item.ChangeProperty("Device Running");

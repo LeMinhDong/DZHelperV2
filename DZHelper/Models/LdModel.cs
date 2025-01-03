@@ -35,6 +35,9 @@ namespace DZHelper.Models
         [ObservableProperty]
         private string dataInput;
 
+        [ObservableProperty]
+        private string textInput;
+
         public IntPtr TopHandle { get; set; }
         public IntPtr BindHandle { get; set; }
         public int AndroidState { get; set; }
