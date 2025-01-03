@@ -40,6 +40,7 @@ public static void QuitInstance(object item, string nameOrIndex)
 ```
 
 ### return Commands
+```Functions in class Helper
 public static List<CommandInfo> CommandsMain(int index)
 {
     List<CommandInfo> commands = new List<CommandInfo>();
@@ -55,8 +56,8 @@ public static List<CommandInfo> CommandsMain(int index)
     }
     return commands;
 }
+```
 
----
 # Test
 
 
