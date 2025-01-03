@@ -63,6 +63,7 @@ public static List<CommandInfo> CommandsMain(int index)
 
 # Demo 1.0.1
 ![image](https://github.com/user-attachments/assets/8e3c5a5a-1277-4ce6-9e8e-096b6c0391c5)
+khi click vào button Load Devices thì function Test sẽ hoạt động
 
 
 
