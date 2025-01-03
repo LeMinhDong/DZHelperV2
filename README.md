@@ -15,8 +15,7 @@ Có thể sử dụng để tương tác với các ứng dụng android, giả 
 - Application: wpf application >>c#,wpf
 
 ## Installation
-NuGet\Install-Package DZ.WPF.DZHelperV2
-Using DZHelper;
+https://www.nuget.org/packages/DZ.WPF.DZHelperV2/
 
 ## Đặc điểm dll.
 1. tạo các module function trong class dll.
