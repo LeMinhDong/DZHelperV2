@@ -62,6 +62,7 @@ public static List<CommandInfo> CommandsMain(int index)
     return commands;
 }
 ```
+trong viewmodel hãy binging list<CommandInfo> lên ItemControl lên views
 
 # Demo 1.0.1
 ![image](https://github.com/user-attachments/assets/8e3c5a5a-1277-4ce6-9e8e-096b6c0391c5)
