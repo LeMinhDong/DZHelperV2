@@ -37,6 +37,7 @@ public static void QuitInstance(object item, string nameOrIndex)
 }
 
 ---
+
 ``` ## Get Command in class helper
 public static List<CommandInfo> CommandsMain(int index)
 {
