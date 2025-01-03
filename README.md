@@ -37,9 +37,8 @@ public static void QuitInstance(object item, string nameOrIndex)
     item.ChangeProperty("quit");
     ExecuteCommand($"quit --index {nameOrIndex}");
 }
+```
 
-
----
 ### return Commands
 public static List<CommandInfo> CommandsMain(int index)
 {
