@@ -23,7 +23,7 @@ https://www.nuget.org/packages/DZ.WPF.DZHelperV2/
 - Binding commands lên view. để khỏi tạo lại nhiều xaml.
 
 ### Cách sử dụng Ldplayer
-``` Functions in class Helper
+```Functions in class Helper
 ## Usage
 public static void LaunchInstance(object item, string nameOrIndex)
 {
@@ -39,8 +39,8 @@ public static void QuitInstance(object item, string nameOrIndex)
 
 ---
 
-``` Get Command in class helper
-## Usage
+```Get Command in class helper
+## return Commands
 public static List<CommandInfo> CommandsMain(int index)
 {
     List<CommandInfo> commands = new List<CommandInfo>();
