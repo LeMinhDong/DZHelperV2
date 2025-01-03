@@ -18,9 +18,9 @@ Có thể sử dụng để tương tác với các ứng dụng android, giả 
 https://www.nuget.org/packages/DZ.WPF.DZHelperV2/
 
 ## Đặc điểm dll.
-1. Tạo các module function trong class dll.
-2. Tạo commands từ trong class dll.
-3. Binding commands lên view. để khỏi tạo lại nhiều xaml.
+- Tạo các module function trong class dll.
+- Tạo commands từ trong class dll.
+- Binding commands lên view. để khỏi tạo lại nhiều xaml.
 
 # Cách sử dụng
 ```Dll
