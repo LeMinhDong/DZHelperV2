@@ -25,7 +25,10 @@ https://www.nuget.org/packages/DZ.WPF.DZHelperV2/
 ## Cách sử dụng Ldplayer
 ### Class Helper >> list module
 ```Functions in class Helper
-
+public static async Task Test(object item)
+{
+    
+}
 public static void LaunchInstance(object item, string nameOrIndex)
 {
     item.ChangeProperty($"launch");
