@@ -28,8 +28,6 @@
       <PackagePath>\</PackagePath>
     </None>
 
-    <None Include=".github\workflows\publish.yml" />
-
   </ItemGroup>
 
   <ItemGroup>
