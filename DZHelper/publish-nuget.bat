@@ -1,0 +1,1 @@
+dotnet nuget push **/*.nupkg -k oy2cvohql7jetuvev6lqlsnx37wydohelb7gqrpswzs62a -s https://api.nuget.org/v3/index.json
