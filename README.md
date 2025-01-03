@@ -1,19 +1,22 @@
 # DzHelperV2.dll
-dll dự kiến có các helper liên quan đến:
-- adb
-- ldplayer
-- selnium
+Dll dự kiến có các helper liên quan đến:
+- Adb
+- Ldplayer
+- Selnium
 
 Có thể sử dụng để tương tác với các ứng dụng android, giả lập android, web browser.
 
-## Ngôn ngữ
-dll: wpf class library
+## Các Dll được tích hợp:
+- CommunityToolkit.Mvvm
 
-application: wpf application >>c#,wpf
+
+## Ngôn ngữ
+- Dll: wpf class library
+- Application: wpf application >>c#,wpf
 
 ## Installation
 NuGet\Install-Package DZ.WPF.DZHelperV2
-using DZHelper;
+Using DZHelper;
 
 ## Đặc điểm dll.
 1. tạo các module function trong class dll.
