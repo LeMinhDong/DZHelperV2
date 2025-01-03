@@ -6,7 +6,7 @@ namespace DZHelper.ViewModels
     {
         private readonly Action<object> _execute;
         private readonly Predicate<object> _canExecute;
-
+        //test
         public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
         {
             _execute = execute;
