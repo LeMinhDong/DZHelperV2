@@ -24,15 +24,15 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <ItemsControl ItemsSource="{Binding CommandsMain}" Grid.Row="0" HorizontalAlignment="Stretch">
+        <ItemsControl ItemsSource="{Binding XSettingData.CommandsMain}" Grid.Row="0" HorizontalAlignment="Stretch">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Command="{Binding Command}"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" IsEnabled="{Binding IsEnabled}" BorderThickness="0" Background="Transparent" Height="25"  Width="80" Content="{Binding Name}" Margin="0 5 0 0"/>
+                    <Button Command="{Binding Command}" Height="22"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" IsEnabled="{Binding IsEnabled}" BorderThickness="0" Background="Transparent"    Content="{Binding Name}" Margin="0 5 0 0"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Stretch">
-            <ItemsControl ItemsSource="{Binding GroupedCommands}" AlternationCount="{Binding GroupedCommands.Count}">
+            <ItemsControl ItemsSource="{Binding XSettingData.GroupedCommands}" AlternationCount="{Binding XSettingData.GroupedCommands.Count}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Expander Header="{Binding GroupName}" 
@@ -45,7 +45,7 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <!-- Hiển thị từng lệnh trong nhóm -->
-                                        <Button Command="{Binding Command}"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" IsEnabled="{Binding IsEnabled}" BorderThickness="0" Background="Transparent" Height="25"   Content="{Binding Name}" Margin="0 5 0 0"/>
+                                        <Button Command="{Binding Command}" Height="22"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" IsEnabled="{Binding IsEnabled}" BorderThickness="0" Background="Transparent"   Content="{Binding Name}" Margin="0 5 0 0"/>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>

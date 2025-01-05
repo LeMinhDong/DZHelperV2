@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using DZHelper.Models;
 using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace DZHelper.Commands
 {
@@ -19,10 +20,29 @@ namespace DZHelper.Commands
         public string Name { get; set; }
         public string Group { get; set; }
         public bool IsEnabled { get; set; } = true;
-        public Func<BaseModel, Task> Action { get; set; }
+        public Func<Task<object>> Action { get; set; } // Delegate cho phương thức không có tham số
+        public Func<object[], Task<object>> ActionWithParameters { get; set; } // Delegate cho phương thức có tham số
         public AsyncRelayCommand Command { get; set; }
-
+        public MethodInfo MethodInfo { get; set; } // Thêm thông tin MethodInfo
         public string Description { get; set; }
         public string IconPath { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            // Kiểm tra null và kiểu của obj
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            // So sánh chỉ dựa trên Name
+            var other = (CommandInfo)obj;
+            return Name == other.Name;
+        }
+
+        // Ghi đè GetHashCode
+        public override int GetHashCode()
+        {
+            // Chỉ sử dụng Name để tạo hash code
+            return Name?.GetHashCode() ?? 0;
+        }
     }
 }

@@ -13,6 +13,8 @@ namespace DZHelper.Extensions
         {
             try
             {
+                if (item == null)
+                    return;
                 var statusProperty = item.GetType().GetProperty(property, BindingFlags.Instance | BindingFlags.Public);
                 if (statusProperty != null && statusProperty.CanWrite)
                     statusProperty.SetValue(item, value);
@@ -20,6 +22,17 @@ namespace DZHelper.Extensions
             catch (Exception)
             {
             }
+        }
+
+        public static object GetPropertyValue(this object item, string propertyName)
+        {
+            if (item == null || string.IsNullOrEmpty(propertyName)) return null;
+
+            var type = item.GetType();
+            var property = type.GetProperty(propertyName);
+            if (property == null) return null;
+
+            return property.GetValue(item);
         }
     }
 }

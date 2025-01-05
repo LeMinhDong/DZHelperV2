@@ -15,7 +15,7 @@ namespace DZHelper.Extensions
     {
         public static void AddItemsNotExits<T>(this ObservableCollection<T> list1, IEnumerable<T> list2)
         {
-            var itemsToAdd = list2.Where(item2 => !list1.Any(item1 => item1.Equals(item2)));
+            var itemsToAdd = list2.Where(item2 => !list1.Any(item1 => item1.Equals(item2))).ToList();
             Application.Current.Dispatcher.Invoke(new Action(() => {
                 foreach (var item in itemsToAdd)
                     list1.Add(item);
@@ -23,7 +23,17 @@ namespace DZHelper.Extensions
         }
         public static void RemoveItemsExits<T>(this ObservableCollection<T> list1, IEnumerable<T> list2)
         {
+            var itemsToRemove = list1.Where(item1 => list2.Any(item2 => item1.Equals(item2))).ToList();
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                foreach (var item in itemsToRemove)
+                    list1.Remove(item);
+            }));
+        }
+
+        public static void RemoveItemsNotExits<T>(this ObservableCollection<T> list1, IEnumerable<T> list2)
+        {
             var itemsToRemove = list1.Where(item1 => !list2.Any(item2 => item1.Equals(item2))).ToList();
+
             Application.Current.Dispatcher.Invoke(new Action(() => {
                 foreach (var item in itemsToRemove)
                     list1.Remove(item);

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TestDll"
+        xmlns:local="clr-namespace:TestDll" WindowStartupLocation="CenterScreen"
         xmlns:views="clr-namespace:TestDll.Views"
         mc:Ignorable="d"
         xmlns:vm="clr-namespace:TestDll.ViewModels"
@@ -21,10 +21,13 @@
         <GridSplitter Width="5" Grid.Column="1"/>
         <Grid Grid.Column="2" Margin="5 0 0 0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="auto"></RowDefinition>
             </Grid.RowDefinitions>
+            <views:UC_DataGrid Grid.Row="0"/>
+            <views:UC_Setting Grid.Row="1"/>
+            <TextBlock Text="{Binding XSettingData.Status}" HorizontalAlignment="Stretch" Grid.Row="2" x:Name="tb_Status"/>
         </Grid>
     </Grid>
 </Window>

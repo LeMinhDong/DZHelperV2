@@ -1,8 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DZHelper.ViewModels;
 
 namespace DZHelper.Models
 {
-    public partial class BaseModel:ObservableObject
+    public partial class BaseModel:BaseViewModel
     {
         [ObservableProperty]
         private bool isStop;
@@ -11,7 +12,7 @@ namespace DZHelper.Models
         private bool isStopNow;
 
         [ObservableProperty]
-        private bool select;
+        private bool select =true;
 
         [ObservableProperty]
         private string status;

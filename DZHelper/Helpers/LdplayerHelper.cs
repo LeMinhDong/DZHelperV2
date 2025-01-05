@@ -1,6 +1,7 @@
 ﻿using DZHelper.Commands;
 using DZHelper.Extensions;
 using DZHelper.HelperCsharf;
+using DZHelper.Helpers.AttributeHelper;
 using DZHelper.Models;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -22,223 +23,376 @@ namespace DZHelper.Helpers
 
             PathLD = path;
         }
+
+        
+        private static LdModel CastModel(object item)
+        {
+            if (item == null)
+                throw new InvalidCastException("Cannot cast null object to LdModel");
+            return item as LdModel;
+        }
+
+        #region Ld-Auto
+        [MethodCategory("LdPlayer", "Ld-Auto", 1)]
+        public static async Task ATest(object item,string command)
+        {
+            var model = CastModel(item);
+            model.Status = "ATest";
+
+            model.Status = "." + model.Status;
+        }
+        [MethodCategory("LdPlayer", "Ld-Auto", 4)]
+        public static async Task Tap(object item,string tapValue)
+        {
+            var model = CastModel(item);
+            model.Status = "quit";
+            //await ExecuteCommand($"quit --index {model.Index}");
+            model.Status = "." + model.Status;
+        }
+
+        [MethodCategory("LdPlayer", "Ld-Auto",  20)]
+        public static async Task Pull(object item, string remoteFilePath, string localFilePath)
+        {
+            var model = CastModel(item);
+            model.Status = "Pull";
+            await ExecuteCommand($@"pull --index {model.Index} --remote ""{remoteFilePath}"" --local ""{localFilePath}""");
+            model.Status = "." + model.Status;
+        }
+
+        [MethodCategory("LdPlayer", "Ld-Auto",  20)]
+        public static async Task Push(object item, string remoteFilePath, string localFilePath)
+        {
+            var model = CastModel(item);
+            model.Status = "Push";
+            await ExecuteCommand($@"push --index {model.Index} --remote ""{remoteFilePath}"" --local ""{localFilePath}""");
+            model.Status = "." + model.Status;
+        }
+
+        [MethodCategory("LdPlayer", "Ld-Auto",  20)]
+        public static async Task InputText(object item,string inputText)
+        {
+            var model = CastModel(item);
+            model.Status = "input text";
+            string text = inputText.EscapeString();
+            await ExecuteCommand($"action --index {model.Index} --key call.input --value '{text}'");
+            model.Status = "." + model.Status;
+        }
+
+
+        [MethodCategory("LdPlayer", "Ld-Auto", 20)]
+        public static async Task DumpXml(object item)
+        {
+            var model = CastModel(item);
+            model.Status = "Dump Xml";
+            await ExecuteCommand($"adb --index {model.Index} --command 'shell uiautomator dump'");
+            var content = ExecuteCommandForResult($"adb --index {model.Index} --command 'shell cat /sdcard/window_dump.xml'").Result;
+            await ExecuteCommand($"adb --index {model.Index} --command 'shell rm /sdcard/window_dump.xml'");
+            model.Status = "." + model.Status;
+        }
+
+        [MethodCategory("LdPlayer", "Ld-Auto", 20)]
+        public static async Task Activity(object item)
+        {
+            var model = CastModel(item);
+            model.Status = "Dump Activity";
+            var content = ExecuteCommandForResult($"adb --index {model.Index} --command 'shell dumpsys window windows | grep mCurrentFocus'").Result;
+            model.Status = "." + model.Status;
+        }
+
+        #endregion
+
+        #region Ld-Adb
+        [MethodCategory("LdPlayer", "Ld-Adb", 4)]
+        public static async Task RestartAdb()
+        {
+            await ExecuteCMD($"adb kill-server");
+            await ExecuteCMD($"adb start-server");
+        }
+
+        [MethodCategory("LdPlayer", "Ld-Adb", 5)]
+        public static async Task ReconnectOffline()
+        {
+            await ExecuteCMD($"adb reconnect offline");
+        }
+
+        [MethodCategory("LdPlayer", "Ld-Adb", 5)]
+        public static async Task AdbDevices()
+        {
+            await ExecuteCMD($"adb devices");
+        }
+
+
+
+
+        #endregion
+
+        #region Ld-Device
         
 
-        public static void LaunchInstance(LdModel item)
+        [MethodCategory("LdPlayer", "Main", 1, false)]
+        public static async Task<List<LdModel>> LoadRunnings()
         {
-            item.ChangeProperty($"launch");
-            ExecuteCommand($"launch --index {item.Index}");
+            var runningstring = await ExecuteCommandForResult("runninglist");
+            var list2string = await ExecuteCommandForResult("list2");
+
+            var list = list2string.ParseLines().Where(itemAll => runningstring.ParseLines().Any(running => itemAll.Contains(running.Trim()))).ToList();
+            return list.Select(item => new LdModel() { Index = item.Split(',')[0], Name = item.Split(',')[1] }).ToList();
         }
 
-        public static void QuitInstance(LdModel item)
+        [MethodCategory("LdPlayer", "Main", 2,false)]
+        public static async Task<List<LdModel>> LoadAll()
         {
-            item.ChangeProperty("quit");
-            ExecuteCommand($"quit --index {item.Index}");
+            var list2 = await ExecuteCommandForResult("list2");
+            return list2.ParseLines().Select(item => new LdModel() { Index = item.Split(',')[0], Name = item.Split(',')[1] }).ToList();
         }
 
-        public static void QuitAllInstances()
+
+        [MethodCategory("LdPlayer", "Ld-Device",  3, 2500)]
+        public static async Task Open(object item)
         {
-            ExecuteCommand("quitall");
+            var model = CastModel(item);
+            model.Status = "launch";
+            await ExecuteCommand($"launch --index {model.Index}");
+            model.Status = "." + model.Status;
         }
 
-        public static void AddInstance(LdModel item, string name)//
+        [MethodCategory("LdPlayer", "Ld-Device", 3)]
+        public static async Task SortWnd()
         {
-            item.ChangeProperty($"add {name}");
-            ExecuteCommand($"add --name {item.TextInput}");
+            await ExecuteCommand("sortWnd");
         }
 
-        public static void CopyInstance(LdModel item)//
+        [MethodCategory("LdPlayer", "Ld-Device",  4)]
+        public static async Task Close(object item)
         {
-            item.ChangeProperty($"copy {item.TextInput}");
-            ExecuteCommand($"copy --name {item.TextInput} --from {item.Index}");
+            var model = CastModel(item);
+            model.Status = "quit";
+            await ExecuteCommand($"quit --index {model.Index}");
+            model.Status = "." + model.Status;
         }
 
-        public static void RemoveInstance(LdModel item)//
+        [MethodCategory("LdPlayer", "Ld-Device", 5)]
+        public static async Task CloseAll()
         {
-            item.ChangeProperty($"remove {item.Index}");
-            ExecuteCommand($"remove --index {item.Index}");
+            await ExecuteCommand("quitall");
         }
 
-        public static void RenameInstance(LdModel item, string newTitle)//
+        [MethodCategory("LdPlayer", "Ld-Device",  6)]
+        public static async Task CopyDevice(object item,string copyDevicename)//
         {
-            item.ChangeProperty($"rename {item.Index}");
-            ExecuteCommand($"rename --index {item.Index} --title {newTitle}");
+            var model = CastModel(item);
+            model.Status = $"copy {model.TextInput}";
+            await ExecuteCommand($"copy --name {copyDevicename} --from {model.Index}");
+            await ModifyRandom(item);
+            model.Status = "." + model.Status;
         }
 
-        public static void InstallAppFromFile(LdModel item, string apkFilePath)
+        [MethodCategory("LdPlayer", "Ld-Device",  7)]
+        public static async Task ModifyRandom(object item)
         {
-            item.ChangeProperty("install apk");
-            ExecuteCommand($"installapp --index {item.Index} --filename \"{apkFilePath}\"");
+            var model = CastModel(item);
+            model.Status = "modify Random";
+            await ExecuteCommand($"modify  --index {model.Index} --imei auto --androidid auto --mac auto");
+            model.Status = "." + model.Status;
         }
 
-        public static void InstallAppFromPackage(LdModel item, string packageName)
+        [MethodCategory("LdPlayer", "Ld-Device",  8)]
+        public static async Task RenameDevice(object item,string renameDeviceName)//
         {
-            item.ChangeProperty("install package");
-            ExecuteCommand($"installapp --index {item.Index} --packagename {packageName}");
+            var model = CastModel(item);
+            model.Status = $"rename {model.Index}";
+            await ExecuteCommand($"rename --index {model.Index} --title {renameDeviceName}");
+            model.Status = "." + model.Status;
         }
 
-        public static void UninstallApp(LdModel item, string packageName)
+        [MethodCategory("LdPlayer", "Ld-Device",  9)]
+        public static async Task AddDevice(object item,string addDeviceName)//
         {
-            item.ChangeProperty("uninstallapp package");
-            ExecuteCommand($"uninstallapp --index {item.Index} --packagename {packageName}");
+            var model = CastModel(item);
+            model.Status = $"add {model.TextInput}";
+            await ExecuteCommand($"add --name {addDeviceName}");
+            model.Status = "." + model.Status;
         }
 
-        public static void BackupInstance(LdModel item, string filePath)
+        [MethodCategory("LdPlayer", "Ld-Device",  10)]
+        public static async Task RemoveDevice(object item)//
         {
-            item.ChangeProperty($"backup {filePath}");
-            ExecuteCommand($"backup --index {item.Index} --file \"{filePath}\"");
+            var model = CastModel(item);
+            model.Status = $"remove {model.Index}";
+            await ExecuteCommand($"remove --index {model.Index}");
+            model.Status = "." + model.Status;
         }
 
-        public static void RestoreInstance(LdModel item, string filePath)
+        [MethodCategory("LdPlayer", "Ld-Device",  11)]
+        public static async Task InstallFromFile(object item, string apkFilePath)
         {
-            item.ChangeProperty($"restore {filePath}");
-            ExecuteCommand($"restore --index {item.Index} --file \"{filePath}\"");
+            var model = CastModel(item);
+            model.Status = "install apk";
+            await ExecuteCommand($"installapp --index {model.Index} --filename \"{apkFilePath}\"");
+            model.Status = "." + model.Status;
         }
 
-        public static void modifyRandom(LdModel item)
+        [MethodCategory("LdPlayer", "Ld-Device",  12)]
+        public static async Task InstallFromPackage(object item, string packageName)
         {
-            item.ChangeProperty($"modify Random");
-            ExecuteCommand($"modify  --index {item.Index} --imei auto --androidid auto --mac auto");
+            var model = CastModel(item);
+            model.Status = "install package";
+            await ExecuteCommand($"installapp --index {model.Index} --packagename {packageName}");
+            model.Status = "." + model.Status;
         }
 
-       
-        public static void Pull(LdModel item, string remoteFilePath, string localFilePath)
+        [MethodCategory("LdPlayer", "Ld-Device",  13)]
+        public static async Task UninstallApp(object item, string packageName)
         {
-            item.ChangeProperty($"Pull");
-            ExecuteCommand($@"pull --index {item.Index} --remote ""{remoteFilePath}"" --local ""{localFilePath}""");
+            var model = CastModel(item);
+            model.Status = "uninstallapp package";
+            await ExecuteCommand($"uninstallapp --index {model.Index} --packagename {packageName}");
+            model.Status = "." + model.Status;
         }
+
+        [MethodCategory("LdPlayer", "Ld-Device",  21)]
+        public static async Task BackupDevice(object item, string backupFilePath)
+        {
+            var model = CastModel(item);
+            model.Status = $"backup {backupFilePath}";
+            await ExecuteCommand($"backup --index {model.Index} --file \"{backupFilePath}\"");
+            model.Status = "." + model.Status;
+        }
+
+        [MethodCategory("LdPlayer", "Ld-Device",  22)]
+        public static async Task RestoreDevice(object item, string restoreFilePath)
+        {
+            var model = CastModel(item);
+            model.Status = $"restore {restoreFilePath}";
+            await ExecuteCommand($"restore --index {model.Index} --file \"{restoreFilePath}\"");
+            model.Status = "." + model.Status;
+        }
+
+
         
-        
 
-        public static void Push(LdModel item, string remoteFilePath, string localFilePath)
+        [MethodCategory("LdPlayer", "Ld-Device",  20)]
+        public static async Task<bool> IsRunning(object item)
         {
-            item.ChangeProperty($"Push");
-            ExecuteCommand($@"push --index {item.Index} --remote ""{remoteFilePath}"" --local ""{localFilePath}""");
-        }
-        public static void InputText(LdModel item)
-        {
-            item.ChangeProperty($"input text");
-            string text = item.TextInput.EscapeString();
-            ExecuteCommand($"adb --index {item.Index} --command \"shell input text '{text}'\"");
-        }
-        public static void RestartAdb(LdModel item)
-        {
-            item.ChangeProperty($"Restart Adb");
-            ExecuteCMD($"adb kill-server");
-            ExecuteCMD($"adb start-server");
-        }
-        public static void ReconnectOffline(LdModel item)
-        {
-            item.ChangeProperty($"Reconnect Offline");
-            ExecuteCMD($"adb reconnect offline");
-        }
-        public static List<string> GetRunningInstances(LdModel item)
-        {
-            item.ChangeProperty("runninglist");
-            var result = ExecuteCommandForResult("runninglist");
-            return ParseList(result);
-        }
-
-        public static List<string> GetAllInstances(LdModel item)
-        {
-            item.ChangeProperty("list");
-            var result = ExecuteCommandForResult("list");
-            return ParseList(result);
-        }
-
-        public static bool IsInstanceRunning(LdModel item)
-        {
-            var result = ExecuteCommandForResult($"isrunning --index {item.Index}");
+            var model = CastModel(item);
+            model.Status = "Check running";
+            var result = await ExecuteCommandForResult($"isrunning --index {model.Index}");
             if (result.Trim().Equals("running", StringComparison.OrdinalIgnoreCase))
             {
-                item.ChangeProperty("Device Running");
+                model.Status = ".Device running";
                 return true;
             }
-            item.ChangeProperty("Device Offine");
+            model.Status = ".Device Offine";
             return false;
         }
+        #endregion
 
-        private static void ExecuteCommand(string command)
+        #region CMD
+
+        public static async Task ExecuteCommand(string command)
         {
-            Process cmdProcess;
-            cmdProcess = new Process();
-            cmdProcess.StartInfo.FileName = "cmd.exe";
-            cmdProcess.StartInfo.WorkingDirectory = PathLD;
-            cmdProcess.StartInfo.Verb = "runas";
-            cmdProcess.StartInfo.Arguments = "/C " + command;
+            try
+            {
+                using (var cmdProcess = new Process())
+                {
+                    cmdProcess.StartInfo.FileName = "powershell.exe";
+                    cmdProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(PathLD);
+                    cmdProcess.StartInfo.Verb = "runas";
+                    cmdProcess.StartInfo.Arguments = "ldconsole "+command;
+                    cmdProcess.StartInfo.RedirectStandardOutput = true;
+                    cmdProcess.StartInfo.UseShellExecute = false;
+                    cmdProcess.StartInfo.CreateNoWindow = true;
 
+                    cmdProcess.Start();
 
-            cmdProcess.StartInfo.RedirectStandardOutput = true;
-            cmdProcess.StartInfo.UseShellExecute = false;
-            cmdProcess.StartInfo.CreateNoWindow = true;
-            cmdProcess.Start();
-            string output = cmdProcess.StandardOutput.ReadToEnd();
-            cmdProcess.WaitForExit(6000);
+                    string output = await cmdProcess.StandardOutput.ReadToEndAsync(); // Đọc kết quả bất đồng bộ
+                    await cmdProcess.WaitForExitAsync(); // Chờ tiến trình hoàn tất một cách bất đồng bộ
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+        public static async Task<string> ExecuteCommandForResult(string command)
+        {
+            try
+            {
+                using (var cmdProcess = new Process())
+                {
+                    cmdProcess.StartInfo.FileName = "powershell.exe";
+                    cmdProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(PathLD);
+                    cmdProcess.StartInfo.Verb = "runas";
+                    cmdProcess.StartInfo.Arguments = "ldconsole " + command;
+                    cmdProcess.StartInfo.RedirectStandardOutput = true;
+                    cmdProcess.StartInfo.UseShellExecute = false;
+                    cmdProcess.StartInfo.CreateNoWindow = true;
+
+                    cmdProcess.Start();
+
+                    string output = await cmdProcess.StandardOutput.ReadToEndAsync(); // Đọc kết quả bất đồng bộ
+                    await cmdProcess.WaitForExitAsync(); // Chờ tiến trình hoàn tất một cách bất đồng bộ
+                    return output ?? string.Empty;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return string.Empty;
         }
 
-        private static string ExecuteCommandForResult(string command)
+
+        public static async Task ExecuteCMD(string command)
         {
-            Process cmdProcess;
-            cmdProcess = new Process();
-            cmdProcess.StartInfo.FileName = "cmd.exe";
-            cmdProcess.StartInfo.WorkingDirectory = PathLD;
-            cmdProcess.StartInfo.Verb = "runas";
-            cmdProcess.StartInfo.Arguments = "/C " + command;
+            try
+            {
+                using (var cmdProcess = new Process())
+                {
+                    cmdProcess.StartInfo.FileName = "cmd.exe";
+                    cmdProcess.StartInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(PathLD);
+                    cmdProcess.StartInfo.Verb = "runas";
+                    cmdProcess.StartInfo.Arguments = command;
+                    cmdProcess.StartInfo.RedirectStandardOutput = true;
+                    cmdProcess.StartInfo.UseShellExecute = false;
+                    cmdProcess.StartInfo.CreateNoWindow = true;
 
+                    cmdProcess.Start();
 
-            cmdProcess.StartInfo.RedirectStandardOutput = true;
-            cmdProcess.StartInfo.UseShellExecute = false;
-            cmdProcess.StartInfo.CreateNoWindow = true;
-            cmdProcess.Start();
-            string output = cmdProcess.StandardOutput.ReadToEnd();
-            cmdProcess.WaitForExit(6000);
-            if (output == null) return "";
-            return output;
+                    string output = await cmdProcess.StandardOutput.ReadToEndAsync(); // Đọc kết quả bất đồng bộ
+                    await cmdProcess.WaitForExitAsync(); // Chờ tiến trình hoàn tất một cách bất đồng bộ
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+        public static async Task<string> ExecuteCMD_ForResult(string command)
+        {
+            try
+            {
+                using (var cmdProcess = new Process())
+                {
+                    cmdProcess.StartInfo.FileName = "cmd.exe";
+                    cmdProcess.StartInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(PathLD);
+                    cmdProcess.StartInfo.Verb = "runas";
+                    cmdProcess.StartInfo.Arguments = command;
+                    cmdProcess.StartInfo.RedirectStandardOutput = true;
+                    cmdProcess.StartInfo.UseShellExecute = false;
+                    cmdProcess.StartInfo.CreateNoWindow = true;
+
+                    cmdProcess.Start();
+
+                    string output = await cmdProcess.StandardOutput.ReadToEndAsync(); // Đọc kết quả bất đồng bộ
+                    await cmdProcess.WaitForExitAsync(); // Chờ tiến trình hoàn tất một cách bất đồng bộ
+                    return output ?? string.Empty;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return string.Empty;
         }
 
-        public static void ExecuteCMD(string command)
-        {
-            Process cmdProcess;
-            cmdProcess = new Process();
-            cmdProcess.StartInfo.FileName = "cmd.exe";
-            cmdProcess.StartInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(PathLD);
-            cmdProcess.StartInfo.Verb = "runas";
-            cmdProcess.StartInfo.Arguments = "/C " + command;
-
-
-            cmdProcess.StartInfo.RedirectStandardOutput = true;
-            cmdProcess.StartInfo.UseShellExecute = false;
-            cmdProcess.StartInfo.CreateNoWindow = true;
-            cmdProcess.Start();
-            string output = cmdProcess.StandardOutput.ReadToEnd();
-            cmdProcess.WaitForExit(6000);
-        }
-
-        public static string ExecuteCMD_ForResult(string command)
-        {
-            Process cmdProcess;
-            cmdProcess = new Process();
-            cmdProcess.StartInfo.FileName = "cmd.exe";
-            cmdProcess.StartInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(PathLD);
-            cmdProcess.StartInfo.Verb = "runas";
-            cmdProcess.StartInfo.Arguments = "/C " + command;
-
-
-            cmdProcess.StartInfo.RedirectStandardOutput = true;
-            cmdProcess.StartInfo.UseShellExecute = false;
-            cmdProcess.StartInfo.CreateNoWindow = true;
-            cmdProcess.Start();
-            string output = cmdProcess.StandardOutput.ReadToEnd();
-            cmdProcess.WaitForExit(6000);
-            if (output == null) return "";
-            return output;
-        }
-
-        private static List<string> ParseList(string output)
-        {
-            if (string.IsNullOrWhiteSpace(output))
-                return new List<string>();
-            return new List<string>(output.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
-        }
+        #endregion
+        
     }
 }

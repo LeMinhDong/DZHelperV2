@@ -9,14 +9,14 @@
     <Product>$(AssemblyName)V2</Product>
     <AssemblyName>$(MSBuildProjectName)V2</AssemblyName>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/LeMinhDong/DZHelperV2</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/LeMinhDong/DZHelperV2.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/LeMinhDong/DZHelperV2/pkgs/nuget/DZ.WPF.DZHelperV2</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/LeMinhDong/DZHelperV2</RepositoryUrl>
     <PackageTags>c#,wpf,datagrid,adb,ldplayer</PackageTags>
     <PackageReleaseNotes>MIT</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Authors>LeMinhDong</Authors>
-    <Version>1.0.4</Version>
+    <Version>1.0.16</Version>
     <Copyright>@DZ.leminhdong 2025</Copyright>
   </PropertyGroup>
 

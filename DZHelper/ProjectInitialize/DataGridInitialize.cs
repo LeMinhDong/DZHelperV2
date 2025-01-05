@@ -4,6 +4,7 @@ using System.Windows;
 using DZHelper.Controls;
 using DZHelper.ViewModels;
 using DZHelper.Triggers;
+using System;
 
 namespace DZHelper.ProjectInitialize
 {
@@ -13,6 +14,8 @@ namespace DZHelper.ProjectInitialize
         {
             dataGrid.InputKeyBinding(); //keyinput binding
             dataGrid.InitLoadingRow(); //loading row
+            dataGrid.EnableHeaderCheckboxHandling(isChecked => { KeyBinding_ControlA(dataGrid,isChecked); });
+            
             dataGrid.DataGridRowStyle_StatusContains("Status", null); //style textblock
         }
         
@@ -138,10 +141,10 @@ namespace DZHelper.ProjectInitialize
             dataGrid.Items.Refresh();
         }
 
-        private static void KeyBinding_ControlA(DataGrid dataGrid)
+        public static void KeyBinding_ControlA(DataGrid dataGrid,bool isSelect = true)
         {
             // Lấy danh sách items từ DataGrid
-            dataGrid.SetSelectAll(true);
+            dataGrid.SetSelectAll(isSelect);
             //dataGrid.Items.Refresh();
             // Refresh DataGrid để cập nhật UI
         }

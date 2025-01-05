@@ -32,17 +32,27 @@ namespace DZHelper.Models
         [ObservableProperty]
         private bool isOpen;
 
-        [ObservableProperty]
-        private string dataInput;
-
+        
         [ObservableProperty]
         private string textInput;
 
-        public IntPtr TopHandle { get; set; }
-        public IntPtr BindHandle { get; set; }
-        public int AndroidState { get; set; }
-        public int DnplayerPID { get; set; }
-        public int VboxPID { get; set; }
+        public override bool Equals(object obj)
+        {
+            // Kiểm tra null và kiểu của obj
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            // So sánh chỉ dựa trên Name
+            var other = (LdModel)obj;
+            return Name == other.Name;
+        }
+
+        // Ghi đè GetHashCode
+        public override int GetHashCode()
+        {
+            // Chỉ sử dụng Name để tạo hash code
+            return Name?.GetHashCode() ?? 0;
+        }
 
     }
 }
