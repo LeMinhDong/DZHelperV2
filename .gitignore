@@ -363,3 +363,16 @@ MigrationBackup/
 FodyWeavers.xsd
 /DZHelper/publish-nuget.bat
 /DZHelper/publish-nuget.txt
+/DZHelper/nuget.config
+/TestDll/TestDll.csproj
+/TestDll/Views/LeftFunction.xaml
+/TestDll/App.xaml
+/TestDll/AssemblyInfo.cs
+/TestDll/MainWindow.xaml
+/TestDll/Views/LeftFunction.xaml.cs
+/TestDll/ViewModels/MainViewModel.cs
+/TestDll/App.xaml
+/TestDll/AssemblyInfo.cs
+/TestDll/MainWindow.xaml
+/TestDll/Views/LeftFunction.xaml
+/TestDll/Views/LeftFunction.xaml.cs
