@@ -31,6 +31,7 @@ namespace TestDll.ViewModels
             SetPathLd();
             LoadCommandsFuns();
             //test
+            //test2
         }
 
         private async Task SetPathLd()
