@@ -21,6 +21,8 @@ namespace TestDll
         {
             InitializeComponent();
             tb_Status.TextBlockStyle_Status("XSettingData.Status");
+
+            //Test3
         }
     }
 }
