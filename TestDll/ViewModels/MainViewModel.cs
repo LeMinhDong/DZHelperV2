@@ -30,7 +30,7 @@ namespace TestDll.ViewModels
         {
             SetPathLd();
             LoadCommandsFuns();
-            
+            //test
         }
 
         private async Task SetPathLd()
