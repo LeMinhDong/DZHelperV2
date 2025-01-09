@@ -22,8 +22,14 @@ namespace DZHelper.Settings
             {
                 if (property.CanRead)
                 {
-                    var value = property.GetValue(settingsObject);
-                    jsonObject[property.Name] = value != null ? JToken.FromObject(value) : JValue.CreateNull();
+                    try
+                    {
+                        var value = property.GetValue(settingsObject);
+                        jsonObject[property.Name] = value != null ? JToken.FromObject(value) : JValue.CreateNull();
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
             }
 

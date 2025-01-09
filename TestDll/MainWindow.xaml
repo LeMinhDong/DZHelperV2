@@ -4,10 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestDll" WindowStartupLocation="CenterScreen"
-        xmlns:views="clr-namespace:TestDll.Views"
+        xmlns:views="clr-namespace:TestDll.Views" Loaded="Window_Loaded" Closed="Window_Closed"
         mc:Ignorable="d"
         xmlns:vm="clr-namespace:TestDll.ViewModels"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="840">
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
@@ -26,7 +26,18 @@
                 <RowDefinition Height="auto"></RowDefinition>
             </Grid.RowDefinitions>
             <views:UC_DataGrid Grid.Row="0"/>
-            <views:UC_Setting Grid.Row="1"/>
+            <TabControl Grid.Row="1" SelectedIndex="{Binding XSettingUI.TabcontrolIndex}">
+                <TabItem Header="General" ToolTip="Setting General">
+                    <views:UC_SettingGeneral />
+                </TabItem>
+                <TabItem Header="Adb-Ld" ToolTip="Setting Acb-Ld">
+                    <views:UC_SettingAdb />
+                </TabItem>
+                <TabItem Header="IMouse"  ToolTip="Setting IMouse">
+                    <views:UC_SettingIMouse/>
+                </TabItem>
+            </TabControl>
+            
             <TextBlock Text="{Binding XSettingData.Status}" HorizontalAlignment="Stretch" Grid.Row="2" x:Name="tb_Status"/>
         </Grid>
     </Grid>

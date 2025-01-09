@@ -19,13 +19,12 @@ namespace DZHelper.Commands
     {
         public string Name { get; set; }
         public string Group { get; set; }
+        public int Index { get; set; }
         public bool IsEnabled { get; set; } = true;
         public Func<Task<object>> Action { get; set; } // Delegate cho phương thức không có tham số
-        public Func<object[], Task<object>> ActionWithParameters { get; set; } // Delegate cho phương thức có tham số
+        public bool ForeachDevices { get; set; }
         public AsyncRelayCommand Command { get; set; }
         public MethodInfo MethodInfo { get; set; } // Thêm thông tin MethodInfo
-        public string Description { get; set; }
-        public string IconPath { get; set; }
 
         public override bool Equals(object obj)
         {

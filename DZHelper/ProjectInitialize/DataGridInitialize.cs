@@ -275,7 +275,13 @@ namespace DZHelper.ProjectInitialize
                     var property = rowItem.GetType().GetProperty(targetColumn);
                     if (property != null && property.CanWrite)
                     {
-                        property.SetValue(rowItem, data);
+                        try
+                        {
+                            property.SetValue(rowItem, data);
+                        }
+                        catch (Exception)
+                        {
+                        }
                     }
                 }
             }

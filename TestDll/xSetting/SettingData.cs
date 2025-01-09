@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DZHelper.Commands;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
 using TestDll.Models;
 
 namespace TestDll.xSetting
@@ -21,5 +22,8 @@ namespace TestDll.xSetting
 
         [ObservableProperty]
         private string status = "Stop";
+
+        [ObservableProperty]
+        private DataGrid datagrid;
     }
 }

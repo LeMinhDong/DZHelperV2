@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="TestDll.Views.UC_SettingAdb"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TestDll.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" >
+            <Setter Property="Margin" Value="0 0 10 0"/>
+        </Style>
+        <Style TargetType="TextBox" >
+            <Setter Property="Margin" Value="0 0 10 0"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <WrapPanel>
+            <TextBlock Text="Path backup"/>
+            <TextBox Text="{Binding XSettingUI.BackupFilePath}" Width="250"/>
+        </WrapPanel>
+        <WrapPanel>
+            <TextBlock Text="Path backup"/>
+            <TextBox Text="{Binding XSettingUI.ApkFolder}" Width="250"/>
+        </WrapPanel>
+    </Grid>
+</UserControl>

@@ -23,6 +23,25 @@ namespace TestDll.xSetting
         [ObservableProperty]
         private string textInput = "Text input";
 
+        [ObservableProperty]
+        private Dictionary<string, bool> dic_Expanded;
+
+        [ObservableProperty]
+        private int numThreads = 2;
+
+        #region Setting UI
+        [ObservableProperty]
+        private int tabcontrolIndex;
+        #endregion
+
+        #region Setting ADB
+        [ObservableProperty]
+        private string backupFilePath;
+
+        [ObservableProperty]
+        private string apkFolder;
+        #endregion
+
         public int GetStringInput()
         {
             int index = 0;
@@ -38,6 +57,8 @@ namespace TestDll.xSetting
                 return lines[index];
             return string.Empty;
         }
+
+        
 
     }
 }

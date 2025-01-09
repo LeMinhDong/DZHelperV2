@@ -1,6 +1,7 @@
 ﻿using DZHelper.Controls;
 using DZHelper.ProjectInitialize;
 using System.Windows.Controls;
+using TestDll.ViewModels;
 
 namespace TestDll.Views
 {
@@ -15,6 +16,11 @@ namespace TestDll.Views
             _grid.DataGrid_InitializeShortcuts_V1();
            
         }
-        
+
+        private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var VM = DataContext as MainViewModel;
+            VM.XSettingData.Datagrid = _grid;
+        }
     }
 }

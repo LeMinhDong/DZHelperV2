@@ -9,34 +9,22 @@ namespace DZHelper.Helpers.AttributeHelper
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class MethodCategoryAttribute : Attribute
     {
-        //thường sẽ là ldplayer
-        public string Category { get; }
-
-
         //Phân theo nhóm trên xaml
         public string Group { get; }
+        public bool ForeachDevices { get; set; } = true;
 
 
         //sắp xếp trên xaml
         public int Index { get; }
 
-        public int ThreadDelay { get; } = 100;
+        public int ThreadDelay { get; set; } = 100;
         public bool IsLoadFun { get; } = true;
 
-        public MethodCategoryAttribute(string category,string group, int index, bool isLoadFun = true)
+        public MethodCategoryAttribute( string group, int index, bool foreachDevices)
         {
-            Category = category;
             Group = group;
             Index = index;
-            IsLoadFun = isLoadFun;
-        }
-        public MethodCategoryAttribute(string category, string group, int index, int threadDelay)
-        {
-            Category = category;
-            Group = group;
-            Index = index;
-            ThreadDelay = threadDelay;
-            
+            ForeachDevices = foreachDevices;
         }
     }
 }

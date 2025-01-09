@@ -33,13 +33,8 @@ namespace DZHelper.Commands
                     {
                         Name = method.Name.ConvertToSpacedStringManual(),
                         Group = method.GetCustomAttribute<MethodCategoryAttribute>().Group,
-                        MethodInfo = method,
-                        Action = parameters.Length == 0
-                            ? GenerateActionWithoutParameters(method)
-                            : null,
-                        ActionWithParameters = parameters.Length > 0
-                            ? GenerateActionWithParameters(method)
-                            : null
+                        MethodInfo = method
+                        
                     });
                 }
             }

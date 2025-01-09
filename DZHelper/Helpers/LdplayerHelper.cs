@@ -5,6 +5,7 @@ using DZHelper.Helpers.AttributeHelper;
 using DZHelper.Models;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows.Shapes;
@@ -33,89 +34,86 @@ namespace DZHelper.Helpers
         }
 
         #region Ld-Auto
-        [MethodCategory("LdPlayer", "Ld-Auto", 1)]
+        [MethodCategory("Ld-Auto", 1, true)]
         public static async Task ATest(object item,string command)
         {
             var model = CastModel(item);
             model.Status = "ATest";
 
-            model.Status = "." + model.Status;
         }
-        [MethodCategory("LdPlayer", "Ld-Auto", 4)]
+        [MethodCategory( "Ld-Auto", 4, true)]
         public static async Task Tap(object item,string tapValue)
         {
             var model = CastModel(item);
             model.Status = "quit";
             //await ExecuteCommand($"quit --index {model.Index}");
-            model.Status = "." + model.Status;
         }
 
-        [MethodCategory("LdPlayer", "Ld-Auto",  20)]
+        [MethodCategory( "Ld-Auto",  20, true)]
         public static async Task Pull(object item, string remoteFilePath, string localFilePath)
         {
             var model = CastModel(item);
             model.Status = "Pull";
             await ExecuteCommand($@"pull --index {model.Index} --remote ""{remoteFilePath}"" --local ""{localFilePath}""");
-            model.Status = "." + model.Status;
         }
 
-        [MethodCategory("LdPlayer", "Ld-Auto",  20)]
+        [MethodCategory( "Ld-Auto",  20, true)]
         public static async Task Push(object item, string remoteFilePath, string localFilePath)
         {
             var model = CastModel(item);
             model.Status = "Push";
             await ExecuteCommand($@"push --index {model.Index} --remote ""{remoteFilePath}"" --local ""{localFilePath}""");
-            model.Status = "." + model.Status;
         }
 
-        [MethodCategory("LdPlayer", "Ld-Auto",  20)]
-        public static async Task InputText(object item,string inputText)
+        [MethodCategory( "Ld-Auto",  20, true)]
+        public static async Task InputText(object item)
         {
             var model = CastModel(item);
             model.Status = "input text";
-            string text = inputText.EscapeString();
-            await ExecuteCommand($"action --index {model.Index} --key call.input --value '{text}'");
-            model.Status = "." + model.Status;
+            if (string.IsNullOrWhiteSpace(model.TextInput1))
+            {
+                model.Status = "Input1 value null";
+                return;
+            }
+            await ExecuteCommand($"action --index {model.Index} --key call.input --value '{model.TextInput1}'");
         }
 
 
-        [MethodCategory("LdPlayer", "Ld-Auto", 20)]
+        [MethodCategory( "Ld-Auto", 20, true)]
         public static async Task DumpXml(object item)
         {
             var model = CastModel(item);
             model.Status = "Dump Xml";
             await ExecuteCommand($"adb --index {model.Index} --command 'shell uiautomator dump'");
-            var content = ExecuteCommandForResult($"adb --index {model.Index} --command 'shell cat /sdcard/window_dump.xml'").Result;
+            model.DataResult = await ExecuteCommandForResult($"adb --index {model.Index} --command 'shell cat /sdcard/window_dump.xml'");
             await ExecuteCommand($"adb --index {model.Index} --command 'shell rm /sdcard/window_dump.xml'");
-            model.Status = "." + model.Status;
         }
 
-        [MethodCategory("LdPlayer", "Ld-Auto", 20)]
+        [MethodCategory( "Ld-Auto", 20, true)]
         public static async Task Activity(object item)
         {
             var model = CastModel(item);
             model.Status = "Dump Activity";
-            var content = ExecuteCommandForResult($"adb --index {model.Index} --command 'shell dumpsys window windows | grep mCurrentFocus'").Result;
-            model.Status = "." + model.Status;
+            model.DataResult = await ExecuteCommandForResult($"adb --index {model.Index} --command 'shell dumpsys window windows | grep mCurrentFocus'");
         }
 
         #endregion
 
         #region Ld-Adb
-        [MethodCategory("LdPlayer", "Ld-Adb", 4)]
+        [MethodCategory( "Ld-Adb", 4, false)]
         public static async Task RestartAdb()
         {
             await ExecuteCMD($"adb kill-server");
             await ExecuteCMD($"adb start-server");
         }
 
-        [MethodCategory("LdPlayer", "Ld-Adb", 5)]
+        [MethodCategory( "Ld-Adb", 5, false)]
         public static async Task ReconnectOffline()
         {
             await ExecuteCMD($"adb reconnect offline");
         }
 
-        [MethodCategory("LdPlayer", "Ld-Adb", 5)]
+        [MethodCategory( "Ld-Adb", 5, false)]
         public static async Task AdbDevices()
         {
             await ExecuteCMD($"adb devices");
@@ -129,7 +127,7 @@ namespace DZHelper.Helpers
         #region Ld-Device
         
 
-        [MethodCategory("LdPlayer", "Main", 1, false)]
+        [MethodCategory( "Main", 1, false)]
         public static async Task<List<LdModel>> LoadRunnings()
         {
             var runningstring = await ExecuteCommandForResult("runninglist");
@@ -139,7 +137,7 @@ namespace DZHelper.Helpers
             return list.Select(item => new LdModel() { Index = item.Split(',')[0], Name = item.Split(',')[1] }).ToList();
         }
 
-        [MethodCategory("LdPlayer", "Main", 2,false)]
+        [MethodCategory( "Main", 2, false)]
         public static async Task<List<LdModel>> LoadAll()
         {
             var list2 = await ExecuteCommandForResult("list2");
@@ -147,134 +145,172 @@ namespace DZHelper.Helpers
         }
 
 
-        [MethodCategory("LdPlayer", "Ld-Device",  3, 2500)]
+        [MethodCategory( "Ld-Device",  3, true)]
         public static async Task Open(object item)
         {
             var model = CastModel(item);
+            if (model == null)
+                return;
             model.Status = "launch";
             await ExecuteCommand($"launch --index {model.Index}");
-            model.Status = "." + model.Status;
         }
 
-        [MethodCategory("LdPlayer", "Ld-Device", 3)]
+        [MethodCategory( "Ld-Device", 3, false)]
         public static async Task SortWnd()
         {
             await ExecuteCommand("sortWnd");
         }
 
-        [MethodCategory("LdPlayer", "Ld-Device",  4)]
+        [MethodCategory( "Ld-Device",  4, true)]
         public static async Task Close(object item)
         {
             var model = CastModel(item);
+            if (model == null)
+                return;
             model.Status = "quit";
             await ExecuteCommand($"quit --index {model.Index}");
-            model.Status = "." + model.Status;
         }
 
-        [MethodCategory("LdPlayer", "Ld-Device", 5)]
+        [MethodCategory( "Ld-Device", 5, false)]
         public static async Task CloseAll()
         {
             await ExecuteCommand("quitall");
         }
 
-        [MethodCategory("LdPlayer", "Ld-Device",  6)]
-        public static async Task CopyDevice(object item,string copyDevicename)//
+        [MethodCategory( "Ld-Device",  6, true)]
+        public static async Task CopyDevice(object item)//
         {
             var model = CastModel(item);
-            model.Status = $"copy {model.TextInput}";
-            await ExecuteCommand($"copy --name {copyDevicename} --from {model.Index}");
+            if (model == null)
+                return;
+            model.Status = $"copy {model.Step}";
+            await ExecuteCommand($"copy --name {model.Step} --from {model.Index}");
             await ModifyRandom(item);
-            model.Status = "." + model.Status;
         }
 
-        [MethodCategory("LdPlayer", "Ld-Device",  7)]
+        [MethodCategory( "Ld-Device",  7, true)]
         public static async Task ModifyRandom(object item)
         {
             var model = CastModel(item);
+            if (model == null)
+                return;
             model.Status = "modify Random";
             await ExecuteCommand($"modify  --index {model.Index} --imei auto --androidid auto --mac auto");
-            model.Status = "." + model.Status;
         }
 
-        [MethodCategory("LdPlayer", "Ld-Device",  8)]
-        public static async Task RenameDevice(object item,string renameDeviceName)//
+        [MethodCategory( "Ld-Device",  8, true)]
+        public static async Task RenameDevice(object item)//
         {
             var model = CastModel(item);
+            if (model == null)
+                return;
             model.Status = $"rename {model.Index}";
-            await ExecuteCommand($"rename --index {model.Index} --title {renameDeviceName}");
-            model.Status = "." + model.Status;
+            if (string.IsNullOrWhiteSpace(model.TextInput1))
+            {
+                model.Status = $"rename {model.TextInput1}";
+                return;
+            }
+            await ExecuteCommand($"rename --index {model.Index} --title {model.TextInput1}");
         }
 
-        [MethodCategory("LdPlayer", "Ld-Device",  9)]
-        public static async Task AddDevice(object item,string addDeviceName)//
+        [MethodCategory( "Ld-Device",  9, false)]
+        public static async Task AddDevice(int NumThreads)//
         {
-            var model = CastModel(item);
-            model.Status = $"add {model.TextInput}";
-            await ExecuteCommand($"add --name {addDeviceName}");
-            model.Status = "." + model.Status;
+            for (int i = 1; i <= NumThreads; i++)
+            {
+                await ExecuteCommand($"add --name AddNew{i}");
+            }
         }
 
-        [MethodCategory("LdPlayer", "Ld-Device",  10)]
+        [MethodCategory( "Ld-Device",  10, true)]
         public static async Task RemoveDevice(object item)//
         {
             var model = CastModel(item);
+            if (model == null)
+                return;
             model.Status = $"remove {model.Index}";
             await ExecuteCommand($"remove --index {model.Index}");
-            model.Status = "." + model.Status;
         }
 
-        [MethodCategory("LdPlayer", "Ld-Device",  11)]
-        public static async Task InstallFromFile(object item, string apkFilePath)
+        [MethodCategory( "Ld-Device",  11, true)]
+        public static async Task InstallFromFile(object item, string ApkFolder)
         {
             var model = CastModel(item);
+            if (model == null)
+                return;
             model.Status = "install apk";
-            await ExecuteCommand($"installapp --index {model.Index} --filename \"{apkFilePath}\"");
-            model.Status = "." + model.Status;
+            ApkFolder = ApkFolder + "/" + model.TextInput1 + ".apk";
+            if (!File.Exists(ApkFolder))
+            {
+                model.Status = $"error: Not exits {ApkFolder}";
+                return;
+            }
+            await ExecuteCommand($"installapp --index {model.Index} --filename \"{ApkFolder}\"");
         }
 
-        [MethodCategory("LdPlayer", "Ld-Device",  12)]
+        [MethodCategory( "Ld-Device",  12, true)]
         public static async Task InstallFromPackage(object item, string packageName)
         {
             var model = CastModel(item);
+            if (model == null)
+                return;
             model.Status = "install package";
             await ExecuteCommand($"installapp --index {model.Index} --packagename {packageName}");
-            model.Status = "." + model.Status;
         }
 
-        [MethodCategory("LdPlayer", "Ld-Device",  13)]
-        public static async Task UninstallApp(object item, string packageName)
+        [MethodCategory( "Ld-Device",  13, true)]
+        public static async Task UninstallApp(object item, string ApkFolder)
         {
             var model = CastModel(item);
-            model.Status = "uninstallapp package";
-            await ExecuteCommand($"uninstallapp --index {model.Index} --packagename {packageName}");
-            model.Status = "." + model.Status;
+            if (model == null)
+                return;
+
+
+            model.Status = $"uninstallapp {model.TextInput1}";
+            await ExecuteCommand($"uninstallapp --index {model.Index} --packagename {model.TextInput1}");
         }
 
-        [MethodCategory("LdPlayer", "Ld-Device",  21)]
+        [MethodCategory( "Ld-Device",  21, true)]
         public static async Task BackupDevice(object item, string backupFilePath)
         {
             var model = CastModel(item);
+            if (model == null)
+                return;
             model.Status = $"backup {backupFilePath}";
+            if (!Directory.Exists(backupFilePath))
+            {
+                model.Status = $"error: Not exits {backupFilePath}";
+                return;
+            }
+
+            backupFilePath = backupFilePath + "/" + model.Name + ".ldbk";
+            
             await ExecuteCommand($"backup --index {model.Index} --file \"{backupFilePath}\"");
-            model.Status = "." + model.Status;
         }
 
-        [MethodCategory("LdPlayer", "Ld-Device",  22)]
-        public static async Task RestoreDevice(object item, string restoreFilePath)
+        [MethodCategory( "Ld-Device",  22, true)]
+        public static async Task RestoreDevice(object item, string backupFilePath)
         {
             var model = CastModel(item);
-            model.Status = $"restore {restoreFilePath}";
-            await ExecuteCommand($"restore --index {model.Index} --file \"{restoreFilePath}\"");
-            model.Status = "." + model.Status;
+            if (model == null)
+                return;
+            model.Status = $"restore {backupFilePath}";
+            backupFilePath = backupFilePath + "/" + model.Name + ".ldbk";
+            if (!File.Exists(backupFilePath))
+            {
+                model.Status = $"error: Not exits {backupFilePath}";
+                return;
+            }
+
+            await ExecuteCommand($"restore --index {model.Index} --file \"{backupFilePath}\"");
         }
 
-
-        
-
-        [MethodCategory("LdPlayer", "Ld-Device",  20)]
+        [MethodCategory( "Ld-Device",  20, true)]
         public static async Task<bool> IsRunning(object item)
         {
             var model = CastModel(item);
+            if (model == null)
+                return false;
             model.Status = "Check running";
             var result = await ExecuteCommandForResult($"isrunning --index {model.Index}");
             if (result.Trim().Equals("running", StringComparison.OrdinalIgnoreCase))
@@ -282,10 +318,10 @@ namespace DZHelper.Helpers
                 model.Status = ".Device running";
                 return true;
             }
-            model.Status = ".Device Offine";
             return false;
         }
         #endregion
+
 
         #region CMD
 
