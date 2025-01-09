@@ -1,6 +1,9 @@
 ﻿using DZHelper.Helpers.AttributeHelper;
 using DZHelper.Models;
 using System.Drawing;
+//using System.Drawing.Common;
+using System.IO;
+using KAutoHelper;
 
 namespace DZHelper.Helpers
 {
@@ -49,17 +52,27 @@ namespace DZHelper.Helpers
             var model = CastModel(item);
             return new Point(0, 0);
         }
+
         [MethodCategory("IOS-", 1, true)]
         public static async Task<Point> GetPointByImages(object item)
         {
             var model = CastModel(item);
             return new Point(0, 0);
         }
+
         [MethodCategory("IOS-", 1, true)]
         public static async Task ScreenShoot(object item)
         {
             var model = CastModel(item);
         }
+
+        public static async Task FindImage(object item)
+        {
+            Bitmap mainBitmap = null, subBitmap = null;
+            var image = ImageScanOpenCV.FindOutPoint(mainBitmap, subBitmap);
+        }
+
+
 
     }
 }
