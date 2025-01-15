@@ -41,6 +41,8 @@ namespace TestDll
             SettingUIHandler.OpenSetting(MainVM.XSettingUI);
 
             //cập nhập lại binding Expanded của GroupedCommands
+            if (MainVM.XSettingUI.Dic_Expanded == null)
+                return;
             foreach (var item in MainVM.XSettingData.GroupedCommands)
             {
                 var dic = MainVM.XSettingUI.Dic_Expanded.Keys.Any(Key => Key == item.GroupName);
