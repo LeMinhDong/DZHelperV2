@@ -30,12 +30,12 @@ namespace TestDll.ViewModels
         {
             SetPathLd();
             LoadCommandsFuns();
+            xSettingData.Devices.Add(new IMouseDevice() { Id = "id"});
         }
 
         private async Task SetPathLd()
         {
             LdplayerHelper.SetPath("C:\\LDPlayer\\LDPlayer64\\ldconsole.exe");
-            LdPlayerHelper2.SetPath("C:\\LDPlayer\\LDPlayer64\\ldconsole.exe");
         }
 
 
@@ -44,8 +44,11 @@ namespace TestDll.ViewModels
         {
             //load all commands mong muốn.
             List<CommandInfo> commandInfos = new List<CommandInfo>();
+            
+            var listHelper = ReflectionScanner.ScanLdCommands(typeof(AutoImouseHelper));
+            listHelper = listHelper.Where(commandInfo => commandInfo.MethodInfo.GetCustomAttribute<MethodCategoryAttribute>().IsLoadFun).ToList();
+            commandInfos.AddRange(listHelper);
             commandInfos.AddRange(await LoadCommandMain());
-            commandInfos.AddRange(ReflectionScanner.ScanLdCommands(typeof(LdplayerHelper)));
             
             foreach (var commandInfo in commandInfos)
             {
@@ -102,7 +105,8 @@ namespace TestDll.ViewModels
         #region CommandInfo
         private async Task MainAction2(CommandInfo commandInfo, bool IsForeach)
         {
-            
+
+            if (XSettingData.Devices.Count == 0) { XSettingData.Devices.Add(new IMouseDevice() { Id = "id 1" }); }
             if (IsForeach)
             {
                 XSettingData.Status = commandInfo.Name;
@@ -114,7 +118,7 @@ namespace TestDll.ViewModels
                         try
                         {
                             device.Status = commandInfo.Name;
-                            var arg = await GetParameter(device, commandInfo.MethodInfo);
+                            var arg = await GetParameter(device,commandInfo.MethodInfo);
                             var result = await LdplayerController.InvokeLdCommandAsync(commandInfo, arg);
                             UpdateActionResultItem(device, result);
                             device.Status = "."+ device.Status;
@@ -148,7 +152,7 @@ namespace TestDll.ViewModels
             }
             
         }
-        private async Task UpdateActionResultItem(LdDevice model, object result)
+        private async Task UpdateActionResultItem(IMouseDevice model, object result)
         {
             if (result == null)
                 return;
@@ -177,8 +181,8 @@ namespace TestDll.ViewModels
                     list.Add(new LdDevice() { Name = re.Name, Index = re.Index });
                 }
 
-                XSettingData.Devices.AddItemsNotExits(list);
-                XSettingData.Devices.RemoveItemsNotExits(list);
+                //XSettingData.Devices.AddItemsNotExits(list);
+                //XSettingData.Devices.RemoveItemsNotExits(list);
                 XSettingData.Datagrid.InitLoadingRow();
             }
         }
@@ -188,7 +192,7 @@ namespace TestDll.ViewModels
         #region Parameter of Command
         
 
-        private async Task<object[]> GetParameter(LdDevice device, MethodInfo methodInfo)
+        private async Task<object[]> GetParameter(IMouseDevice device, MethodInfo methodInfo)
         {
             var parameters = methodInfo.GetParameters();
 

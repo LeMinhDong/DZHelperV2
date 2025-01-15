@@ -114,7 +114,17 @@ namespace DZHelper.ProjectInitialize
             // Lấy danh sách items từ DataGrid
             dataGrid.ToggleSelect(true, false);
             // Refresh DataGrid để cập nhật UI
-            dataGrid.Items.Refresh();
+            dataGrid.DataGridRefresh();
+        }
+        private static void DataGridRefresh(this DataGrid dataGrid)
+        {
+            try
+            {
+                dataGrid.Items.Refresh();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private static void KeyBinding_ControlEnter(DataGrid dataGrid)
@@ -122,7 +132,7 @@ namespace DZHelper.ProjectInitialize
             // Lấy danh sách items từ DataGrid
             dataGrid.ToggleSelectSelectedOnly(false);
             // Refresh DataGrid để cập nhật UI
-            dataGrid.Items.Refresh();
+            dataGrid.DataGridRefresh();
         }
 
         private static void KeyBinding_ShiftEnter(DataGrid dataGrid)
@@ -130,7 +140,7 @@ namespace DZHelper.ProjectInitialize
             // Lấy danh sách items từ DataGrid
             dataGrid.ToggleSelectSelectedOnly(true);
             // Refresh DataGrid để cập nhật UI
-            dataGrid.Items.Refresh();
+            dataGrid.DataGridRefresh();
         }
 
         private static void KeyBinding_AltEnter(DataGrid dataGrid)
@@ -138,7 +148,7 @@ namespace DZHelper.ProjectInitialize
             // Lấy danh sách items từ DataGrid
             dataGrid.ToggleSelect(false, true);
             // Refresh DataGrid để cập nhật UI
-            dataGrid.Items.Refresh();
+            dataGrid.DataGridRefresh();
         }
 
         public static void KeyBinding_ControlA(DataGrid dataGrid,bool isSelect = true)

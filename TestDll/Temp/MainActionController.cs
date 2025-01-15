@@ -10,13 +10,13 @@ namespace TestDll.Temp
 {
     public static class MainActionController
     {
-        [MethodCategory( "Main", 1,  true)]
+        [MethodCategory(true, "Main", 1,  true,200)]
         public static async Task StopAction(LdDevice device)
         {
             device.IsStop = true;
         }
 
-        [MethodCategory("Main", 1,  true)]
+        [MethodCategory(true, "Main", 1,  true, 200)]
         public static async Task PauseAction(LdDevice device)
         {
             device.IsStop = true;

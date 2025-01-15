@@ -32,14 +32,7 @@ namespace DZHelper.Models
         [ObservableProperty]
         private bool isOpen;
 
-        [ObservableProperty]
-        private string dataResult;
-
-        [ObservableProperty]
-        private string textInput1;
-
-        [ObservableProperty]
-        private string textInput2;
+       
 
         public override bool Equals(object obj)
         {

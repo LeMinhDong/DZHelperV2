@@ -1,14 +1,10 @@
-﻿using DZHelper.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace DZHelper.Models
 {
     public partial class IMouseModel:BaseModel
     {
-
+        [ObservableProperty]
+        private string id;
     }
 }

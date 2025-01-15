@@ -24,7 +24,7 @@ namespace DZHelper.Temp
             PathLD = path;
         }
 
-        [MethodCategory("Ld-Auto", 1, true)]
+        //[MethodCategory(true,"Ld-Auto", 1, true)]
         public static async Task Tap(object item, string tapValue)
         {
             // Giả lập thực thi logic TAP
@@ -32,21 +32,21 @@ namespace DZHelper.Temp
             // Cập nhật status, ...
         }
 
-        [MethodCategory("Ld-Auto", 2,  true)]
+        //[MethodCategory(true, "Ld-Auto", 2,  true)]
         public static async Task<string> InputText(object device, string text)
         {
             await Task.Delay(50);
             return $"Đã input: {text}";
         }
 
-        [MethodCategory("Ld-Auto", 3,  false)]
+        //[MethodCategory(true, "Ld-Auto", 3,  false)]
         public static async Task<bool> CheckIsRunning(object device)
         {
             await Task.Delay(80);
             return true;
         }
 
-        [MethodCategory("Ld-Auto", 4,  true)]
+        //[MethodCategory(true, "Ld-Auto", 4,  true)]
         public static async Task<List<LdModel>> GetAllModes(object device)
         {
             await Task.Delay(60);
@@ -57,7 +57,7 @@ namespace DZHelper.Temp
             };
         }
 
-        [MethodCategory("Main", 1, false)]
+        //[MethodCategory(true, "Main", 1, false)]
         public static async Task<List<LdModel>> LoadRunnings()
         {
             var runningstring = await ExecuteCommandForResult("runninglist");

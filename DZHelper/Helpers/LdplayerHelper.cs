@@ -34,14 +34,15 @@ namespace DZHelper.Helpers
         }
 
         #region Ld-Auto
-        [MethodCategory("Ld-Auto", 1, true)]
+        [MethodCategory(true,"Ld-Auto", 1, true,200)]
         public static async Task ATest(object item,string command)
         {
             var model = CastModel(item);
             model.Status = "ATest";
 
         }
-        [MethodCategory( "Ld-Auto", 4, true)]
+
+        [MethodCategory(true, "Ld-Auto", 4, true, 200)]
         public static async Task Tap(object item,string tapValue)
         {
             var model = CastModel(item);
@@ -49,7 +50,7 @@ namespace DZHelper.Helpers
             //await ExecuteCommand($"quit --index {model.Index}");
         }
 
-        [MethodCategory( "Ld-Auto",  20, true)]
+        [MethodCategory(true, "Ld-Auto",  20, true, 200)]
         public static async Task Pull(object item, string remoteFilePath, string localFilePath)
         {
             var model = CastModel(item);
@@ -57,7 +58,7 @@ namespace DZHelper.Helpers
             await ExecuteCommand($@"pull --index {model.Index} --remote ""{remoteFilePath}"" --local ""{localFilePath}""");
         }
 
-        [MethodCategory( "Ld-Auto",  20, true)]
+        [MethodCategory(true, "Ld-Auto",  20, true, 200)]
         public static async Task Push(object item, string remoteFilePath, string localFilePath)
         {
             var model = CastModel(item);
@@ -65,7 +66,7 @@ namespace DZHelper.Helpers
             await ExecuteCommand($@"push --index {model.Index} --remote ""{remoteFilePath}"" --local ""{localFilePath}""");
         }
 
-        [MethodCategory( "Ld-Auto",  20, true)]
+        [MethodCategory(true, "Ld-Auto",  20, true, 200)]
         public static async Task InputText(object item)
         {
             var model = CastModel(item);
@@ -79,7 +80,7 @@ namespace DZHelper.Helpers
         }
 
 
-        [MethodCategory( "Ld-Auto", 20, true)]
+        [MethodCategory(true, "Ld-Auto", 20, true, 200)]
         public static async Task DumpXml(object item)
         {
             var model = CastModel(item);
@@ -89,7 +90,7 @@ namespace DZHelper.Helpers
             await ExecuteCommand($"adb --index {model.Index} --command 'shell rm /sdcard/window_dump.xml'");
         }
 
-        [MethodCategory( "Ld-Auto", 20, true)]
+        [MethodCategory(true, "Ld-Auto", 20, true, 200)]
         public static async Task Activity(object item)
         {
             var model = CastModel(item);
@@ -100,20 +101,20 @@ namespace DZHelper.Helpers
         #endregion
 
         #region Ld-Adb
-        [MethodCategory( "Ld-Adb", 4, false)]
+        [MethodCategory(true, "Ld-Adb", 4, false, 200)]
         public static async Task RestartAdb()
         {
             await ExecuteCMD($"adb kill-server");
             await ExecuteCMD($"adb start-server");
         }
 
-        [MethodCategory( "Ld-Adb", 5, false)]
+        [MethodCategory(true, "Ld-Adb", 5, false, 200)]
         public static async Task ReconnectOffline()
         {
             await ExecuteCMD($"adb reconnect offline");
         }
 
-        [MethodCategory( "Ld-Adb", 5, false)]
+        [MethodCategory(true, "Ld-Adb", 5, false, 200)]
         public static async Task AdbDevices()
         {
             await ExecuteCMD($"adb devices");
@@ -127,7 +128,7 @@ namespace DZHelper.Helpers
         #region Ld-Device
         
 
-        [MethodCategory( "Main", 1, false)]
+        [MethodCategory(true, "Main", 1, false, 200)]
         public static async Task<List<LdModel>> LoadRunnings()
         {
             var runningstring = await ExecuteCommandForResult("runninglist");
@@ -137,7 +138,7 @@ namespace DZHelper.Helpers
             return list.Select(item => new LdModel() { Index = item.Split(',')[0], Name = item.Split(',')[1] }).ToList();
         }
 
-        [MethodCategory( "Main", 2, false)]
+        [MethodCategory(true, "Main", 2, false, 200)]
         public static async Task<List<LdModel>> LoadAll()
         {
             var list2 = await ExecuteCommandForResult("list2");
@@ -145,7 +146,7 @@ namespace DZHelper.Helpers
         }
 
 
-        [MethodCategory( "Ld-Device",  3, true)]
+        [MethodCategory(true, "Ld-Device",  3, true, 2000)]
         public static async Task Open(object item)
         {
             var model = CastModel(item);
@@ -155,13 +156,13 @@ namespace DZHelper.Helpers
             await ExecuteCommand($"launch --index {model.Index}");
         }
 
-        [MethodCategory( "Ld-Device", 3, false)]
+        [MethodCategory(true, "Ld-Device", 3, false, 200)]
         public static async Task SortWnd()
         {
             await ExecuteCommand("sortWnd");
         }
 
-        [MethodCategory( "Ld-Device",  4, true)]
+        [MethodCategory(true, "Ld-Device",  4, true, 200)]
         public static async Task Close(object item)
         {
             var model = CastModel(item);
@@ -171,13 +172,13 @@ namespace DZHelper.Helpers
             await ExecuteCommand($"quit --index {model.Index}");
         }
 
-        [MethodCategory( "Ld-Device", 5, false)]
+        [MethodCategory(true, "Ld-Device", 5, false, 200)]
         public static async Task CloseAll()
         {
             await ExecuteCommand("quitall");
         }
 
-        [MethodCategory( "Ld-Device",  6, true)]
+        [MethodCategory(true, "Ld-Device",  6, true, 4000)]
         public static async Task CopyDevice(object item)//
         {
             var model = CastModel(item);
@@ -188,7 +189,7 @@ namespace DZHelper.Helpers
             await ModifyRandom(item);
         }
 
-        [MethodCategory( "Ld-Device",  7, true)]
+        [MethodCategory(true, "Ld-Device",  7, true, 200)]
         public static async Task ModifyRandom(object item)
         {
             var model = CastModel(item);
@@ -198,7 +199,7 @@ namespace DZHelper.Helpers
             await ExecuteCommand($"modify  --index {model.Index} --imei auto --androidid auto --mac auto");
         }
 
-        [MethodCategory( "Ld-Device",  8, true)]
+        [MethodCategory(true, "Ld-Device",  8, true, 200)]
         public static async Task RenameDevice(object item)//
         {
             var model = CastModel(item);
@@ -213,7 +214,7 @@ namespace DZHelper.Helpers
             await ExecuteCommand($"rename --index {model.Index} --title {model.TextInput1}");
         }
 
-        [MethodCategory( "Ld-Device",  9, false)]
+        [MethodCategory(true, "Ld-Device",  9, false, 200)]
         public static async Task AddDevice(int NumThreads)//
         {
             for (int i = 1; i <= NumThreads; i++)
@@ -222,7 +223,7 @@ namespace DZHelper.Helpers
             }
         }
 
-        [MethodCategory( "Ld-Device",  10, true)]
+        [MethodCategory(true, "Ld-Device",  10, true, 200)]
         public static async Task RemoveDevice(object item)//
         {
             var model = CastModel(item);
@@ -232,7 +233,7 @@ namespace DZHelper.Helpers
             await ExecuteCommand($"remove --index {model.Index}");
         }
 
-        [MethodCategory( "Ld-Device",  11, true)]
+        [MethodCategory(true, "Ld-Device",  11, true, 200)]
         public static async Task InstallFromFile(object item, string ApkFolder)
         {
             var model = CastModel(item);
@@ -248,7 +249,7 @@ namespace DZHelper.Helpers
             await ExecuteCommand($"installapp --index {model.Index} --filename \"{ApkFolder}\"");
         }
 
-        [MethodCategory( "Ld-Device",  12, true)]
+        [MethodCategory(true, "Ld-Device",  12, true, 200)]
         public static async Task InstallFromPackage(object item, string packageName)
         {
             var model = CastModel(item);
@@ -258,7 +259,7 @@ namespace DZHelper.Helpers
             await ExecuteCommand($"installapp --index {model.Index} --packagename {packageName}");
         }
 
-        [MethodCategory( "Ld-Device",  13, true)]
+        [MethodCategory(true, "Ld-Device",  13, true, 200)]
         public static async Task UninstallApp(object item, string ApkFolder)
         {
             var model = CastModel(item);
@@ -270,7 +271,7 @@ namespace DZHelper.Helpers
             await ExecuteCommand($"uninstallapp --index {model.Index} --packagename {model.TextInput1}");
         }
 
-        [MethodCategory( "Ld-Device",  21, true)]
+        [MethodCategory(true, "Ld-Device",  21, true, 200)]
         public static async Task BackupDevice(object item, string backupFilePath)
         {
             var model = CastModel(item);
@@ -288,7 +289,7 @@ namespace DZHelper.Helpers
             await ExecuteCommand($"backup --index {model.Index} --file \"{backupFilePath}\"");
         }
 
-        [MethodCategory( "Ld-Device",  22, true)]
+        [MethodCategory(true, "Ld-Device",  22, true, 200)]
         public static async Task RestoreDevice(object item, string backupFilePath)
         {
             var model = CastModel(item);
@@ -305,7 +306,7 @@ namespace DZHelper.Helpers
             await ExecuteCommand($"restore --index {model.Index} --file \"{backupFilePath}\"");
         }
 
-        [MethodCategory( "Ld-Device",  20, true)]
+        [MethodCategory(true, "Ld-Device",  20, true, 200)]
         public static async Task<bool> IsRunning(object item)
         {
             var model = CastModel(item);

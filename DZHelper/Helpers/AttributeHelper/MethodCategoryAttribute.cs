@@ -17,14 +17,17 @@ namespace DZHelper.Helpers.AttributeHelper
         //sắp xếp trên xaml
         public int Index { get; }
 
-        public int ThreadDelay { get; set; } = 100;
+        public int ThreadDelay { get; set; } = 500;
         public bool IsLoadFun { get; } = true;
 
-        public MethodCategoryAttribute( string group, int index, bool foreachDevices)
+
+        public MethodCategoryAttribute(bool isLoadFun, string group, int index, bool foreachDevices,int threadDelay)
         {
+            IsLoadFun = isLoadFun;
             Group = group;
             Index = index;
             ForeachDevices = foreachDevices;
+            ThreadDelay = threadDelay;
         }
     }
 }

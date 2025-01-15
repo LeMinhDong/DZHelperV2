@@ -1,12 +1,14 @@
-﻿using System;
+﻿using DZHelper.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DZHelper.Helpers
+namespace TestDll.Models
 {
-    internal class AutoImouseRequest
+    public partial class IMouseDevice:IMouseModel
     {
+
     }
 }

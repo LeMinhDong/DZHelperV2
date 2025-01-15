@@ -19,5 +19,15 @@ namespace DZHelper.Models
 
         [ObservableProperty]
         private string step;
+
+        [ObservableProperty]
+        private string dataResult;
+
+        [ObservableProperty]
+        private string textInput1;
+
+        [ObservableProperty]
+        private string textInput2;
+
     }
 }
